@@ -1,19 +1,10 @@
-node {
-     label 'linux-node'
-     stage('clone repository') {
-      checkout scm  
+agent {
+    // Equivalent to "docker build -f Dockerfile.build --build-arg version=1.0.2 ./build/
+    dockerfile {
+        filename 'Dockerfile'
+        dir 'build'
+        label 'linux-node'
+        additionalBuildArgs  '--build-arg version=1.0.2'
+        args '-v /tmp:/tmp'
     }
-     stage('Build docker Image'){
-      app = docker.build("jenkins/jenkins")
-    }
-     stage('Test Image'){
-       app.inside {
-         sh 'echo "TEST PASSED"'
-      }  
-    }
-     stage('Push Image'){
-       docker.withRegistry('https://registry.hub.docker.com', 'git') {            
-       app.push("${env.BUILD_NUMBER}")            
-       app.push("latest")   
-   }
 }
