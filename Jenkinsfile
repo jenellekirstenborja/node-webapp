@@ -2,6 +2,7 @@ node {
     def app
 
     stage('Clone repository') {
+        git 'https://github.com/jenellekirstenborja/node-webapp.git'
       
 
         checkout scm
