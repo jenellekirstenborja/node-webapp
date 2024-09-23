@@ -1,31 +1,19 @@
 node {
-    def app
-
-    stage('Clone repository') {
-        git 'https://github.com/jenellekirstenborja/node-webapp.git'
-      
-
-        checkout scm
+     def app 
+     stage('clone repository') {
+      checkout scm  
     }
-
-    stage('Build image') {
-  
-       app = docker.build("jenkins/jenkins")
+     stage('Build docker Image'){
+      app = docker.build("jenkins/jenkins")
     }
-
-    stage('Test image') {
-  
-
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
+     stage('Test Image'){
+       app.inside {
+         sh 'echo "TEST PASSED"'
+      }  
     }
-
-    stage('Push image') {
-        
-        docker.withRegistry('https://registry.hub.docker.com', 'git') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
-    }
+     stage('Push Image'){
+       docker.withRegistry('https://registry.hub.docker.com', 'git') {            
+       app.push("${env.BUILD_NUMBER}")            
+       app.push("latest")   
+   }
 }
