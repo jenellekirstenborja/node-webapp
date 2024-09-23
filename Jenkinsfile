@@ -1,13 +1,10 @@
 pipeline {
-    agent any
+    agent { dockerfile true }
     stages {
-        stage('Build') {
-            agent {
-                linux-node
-                }
-            }
+        stage('Test') {
             steps {
-                sh 'gradle --version'
+                sh 'node --version'
+                sh 'svn --version'
             }
         }
     }
