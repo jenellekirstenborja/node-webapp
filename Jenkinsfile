@@ -1,8 +1,20 @@
-node ('linux-node') {
-    checkout scm
-    def customImage = docker.build("jenkins/jenkins")
-    customImage.inside {
-        sh 'Inside Container'
-        sh 'cat /etc/os-release'
+#!/usr/bin/env groovy
+pipeline {
+  agent {
+    dockerfile {
+      filename 'Dockerfile'
+      label 'linux-node'
     }
+  }
+  stages {
+    stage("example stage") {
+      steps {
+        script {
+          sh 'cat /etc/os-release'
+          sh 'curl --version'
+          sh 'echo Successfully compiled'
+        }
+      }
+    }
+  }
 }
