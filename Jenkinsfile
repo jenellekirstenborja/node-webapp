@@ -1,20 +1,31 @@
-#!/usr/bin/env groovy
 pipeline {
-  agent {
-    dockerfile {
-      filename 'Dockerfile'
-      label 'linux-node'
-    }
-  }
-  stages {
-    stage("example stage") {
-      steps {
-        script {
-          sh 'cat /etc/os-release'
-          sh 'curl --version'
-          sh 'echo Successfully compiled'
+    agent linux-node
+
+    
+    stages {
+        stage('Build and Test') {
+            when {
+                expression { !infra.isTrusted() }
+            }
+
+            parallel {
+                stage('Windows') {
+                    agent {
+                        label "docker-windows"
+                    }
+                    steps {
+                        bat "powershell -File ./make.ps1 -Target build"
+                    }
+                }
+                stage('Linux') {
+                    agent {
+                        label "docker&&linux"
+                    }
+                    steps {
+                        sh "make lint"
+                        sh "make build"
+                        sh "make test"
+                    }
+                }
+            }
         }
-      }
-    }
-  }
-}
