@@ -1,9 +1,8 @@
 node {
     checkout scm
+    def testImage = docker.build("jenkins/jenkins", "./dockerfiles/test") 
 
-    def customImage = docker.build("jenkins/jenkins")
-
-    customImage.inside {
+    testImage.inside {
         sh 'make test'
     }
 }
