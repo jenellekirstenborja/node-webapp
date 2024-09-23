@@ -1,5 +1,5 @@
 node {
-     def app 
+     label 'linux-node'
      stage('clone repository') {
       checkout scm  
     }
